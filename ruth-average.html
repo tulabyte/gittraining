@@ -1,0 +1,49 @@
+<html>
+<script type="text/javascript" src="../trenova/vendor/angular/angular.js"></script>
+<script>
+// initialize angular module
+var app = angular.module('myApp', []);
+
+app.controller('formCtrl', function($scope) {
+	
+	$scope.avg = 0.0;
+
+	// function to get average of array of numbers
+	$scope.getAverage = function(str) {
+
+		if(str == "" || str === undefined || str === null) {
+			return 0.0;
+		}
+
+		// if last xter is comma, cut it off
+		var lastxterindex = str.length-1;
+
+		if(str[lastxterindex] == ',') {
+			// cut if off
+			str = str.slice(0,lastxterindex);
+		}
+
+		// split the string into and array of numbers
+		numbers = str.split(',');
+
+		var sum = 0;
+			
+		numbers.forEach(function(num,i) {
+			 sum += parseInt(num);
+		});
+		return sum/numbers.length; 	
+	}
+
+	
+});
+</script>
+<body>
+<div ng-app="myApp" ng-controller="formCtrl">
+	<p>Enter the numbers separated by commas</p>
+	<p><input type="text" ng-model="numbers"></p>
+	<!-- <p><button ng-click="getAverage(numbers)">GET AVERAGE</button></p> -->
+	<hr>
+	<p>Calculated Average: <strong>{{ getAverage(numbers) }}</strong></p>
+</div>
+</body>
+</html>

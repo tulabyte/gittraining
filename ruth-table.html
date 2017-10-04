@@ -1,0 +1,121 @@
+<html>
+<!-- <script type="text/javascript" src="\angular-js\angular.js"></script> -->
+<script src="../trenova/vendor/angular/angular.js"></script>
+<script>//script No.2 for the table generally
+var app =  angular.module('myApp', []);
+
+app.controller('formCtrl', function($scope) {
+    $scope.customers = [//data for the table
+    {id:"10", name:"Ruth Chisom", email:"ruth.chisom@yahoo.com", phone:"080"},
+    {id:"21", name: "Alex Charity", email:"alex.charity@yahoo.com", phone:"0750"},
+    {id:"11", name: "Ruth Chis", email:"ruth.chis@yahoo.com", phone:"070"},
+    {id:"12", name: "Tula Byte", email:"tula.byte@yahoo.com", phone:"080"},
+    {id:"13", name: "Ama Zing", email:"ama.zing@yahoo.com", phone:"0701"},
+    {id:"14", name: "Sara High", email:"sara.high@yahoo.com", phone:"0803"},
+    {id:"15", name: "Miz Slim", email:"miz.slim@yahoo.com", phone:"0912"}
+    ];
+
+    $scope.myDelete = function(name) {
+        //add confirm popup
+        var msg = "Do you really want to delete this customer?";
+        if (confirm(msg)) {
+        var index = $scope.customers.indexOf(name);     
+        $scope.customers.splice( index, 1 );    //delete 1row in position[index]
+    };
+        
+    }
+
+    //Add a customer - The newcustomer parameter ensures that it does nothing if nothing is entered (blank)
+    $scope.myAdd = function (newcustomer) {
+            //indirectly accessing parameters in $scope through newcustomer
+                $scope.customers.push({
+                     'id': newcustomer.id,  //why are d others not in colour blue
+                     'name': newcustomer.name,
+                     'email': newcustomer.email,
+                     'phone': newcustomer.phone
+                 })
+        }
+
+    //Edit a customer
+    $scope.editablerow = '';
+
+    $scope.myEdit = function(customer) { 
+        console.log('myEdit clicked! customer clicked:',customer);
+        //return 'edit';
+        console.log('editablerow before copy:',$scope.editablerow);
+        $scope.newcustomer = angular.copy(customer);
+        console.log('editablerow after copy:',$scope.editablerow);
+    
+    };
+ //convert the field to editable 
+ $scope.loadTemplate = function(customer) { 
+    if (customer.id === $scope.editablerow.id) return 'edit';
+        else return 'view';
+ };
+ //save changes
+ $scope.saveData = function (indx) {
+        $scope.customers[indx] = angular.copy($scope.editablerow);
+        $scope.reset();
+    };
+    //ignore changes
+$scope.reset = function(){
+    $scope.editablerow = [];
+};
+});
+</script>
+
+    <script type="text/ng-template" id="view">//script No.3 to change the table when edit is clicked
+                <td>{{customer.id}}</td>
+                <td>{{customer.name}} </td>
+                <td>{{customer.email}}</td>
+                <td>{{customer.phone}}</td>
+                <td><button ng-click="myDelete(customer)">Delete</button></td>
+                <td><button ng-click="myEdit(customer)">Edit</button></td>
+    </script>
+    <script type="text" id="edit">//script No.4 to change the table when edit is cancelled
+        
+        <td> <input type="text" ng-model="editablerow.id" /></td>
+        <td> <input type="text" ng-model="editablerow.name" /></td>
+        <td> <input type="text" ng-model="editablerow.email" /></td>
+        <td> <input type="text" ng-model="editablerow.phone" /></td>
+        <td>
+            <button ng-click="saveData($index)">Save</button>
+            <button ng-click="reset()">Cancel</button>
+        </td>
+    </script>
+
+<body>
+    <div ng-app="myApp" ng-controller="formCtrl">
+        <table border = "2" padding="10">
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>EMAIL</th>
+                <th>PHONE NO</th>
+                <th colspan="2">ACTION</th>
+            </tr>
+            <tr ng-repeat="customer in customers">
+                <td>{{customer.id}}</td>
+                <td>{{customer.name}} </td>
+                <td>{{customer.email}}</td>
+                <td>{{customer.phone}}</td>
+                <td><button ng-click="myDelete(customer)">Delete</button></td>
+                <td><button ng-click="myEdit(customer)">Edit</button></td>
+            </tr>
+        </table>
+
+        <br>Add a new customer:
+        <!-- ID:<input type="text" ng-model="id">
+        NAME<input type="text" ng-model="name">
+        EMAIL<input type="text" ng-model="email">
+        PHONE<input type="text" ng-model="phone"> -->
+        ID:<input type="text" ng-model="newcustomer.id">
+        NAME<input type="text" ng-model="newcustomer.name">
+        EMAIL<input type="text" ng-model="newcustomer.email">
+        PHONE<input type="text" ng-model="newcustomer.phone">
+        <button ng-click="myAdd(newcustomer)">Add Customer</button>
+    </div>
+    
+</body>
+
+</html>
